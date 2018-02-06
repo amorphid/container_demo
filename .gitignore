@@ -1,0 +1,5 @@
+# ignore Vagrant metadata
+/.vagrant/
+
+# ignore log files
+/*.log

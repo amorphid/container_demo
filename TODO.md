@@ -1,6 +1,6 @@
 # Todo
 
-- Initialize a Vagrant box on host
+- DONE:  Initialize a Vagrant box on host
 - Set up a synced folder between host & guest
 - Install Docker Edge on guest
 - Set up a Jenkins container
