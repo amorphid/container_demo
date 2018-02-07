@@ -1,5 +1,7 @@
 # Walkthrough
 
+This walkthrough assumes you're using a Bash shell.  Hopefully all of the Vagrant & VirtualBox commands will work as written.  You may need to adjust some of the commands to work in any other shell (e.g. use the Windows equivalent for `mkdir -p ./host/tmp`).
+
 # Initialize a Vagrant box on host
 
 As of 2018-02-06, it looks like the Edge version of Docker CE work on Unbuntu 17.10 (Artful Aardvark), so let's create a initialize a Vagrant box using that.
