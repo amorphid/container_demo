@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -x
+
+# This script:
+# - uninstalls old version of Docker CE
+# - installs new version of Docker CE
+# - is based on instructions from https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
+# Version of Docker CE to install.  If no value provided, the lastest version will be used
+VERSION=$1
+
+# remove old version of Docker CE
+sudo apt-get remove docker docker-engine docker.io
+
+# Update the apt package index
+sudo apt-get update -y
+
+# Install packages to allow apt to use a repository over HTTPS
+sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+
+# Add Docker’s official GPG key
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88, by searching for the last 8 characters of the fingerprint.
+if [[ ! $(sudo apt-key fingerprint 0EBFCD88) ]] ; then
+  echo "unable to verify fingerprint" >&2
+  exit 1
+fi
+
+# Use the following command to set up the stable repository. You always need the stable repository, even if you want to install builds from the edge or test repositories as well. To add the edge or test repository, add the word edge or test (or both) after the word stable in the commands below.
+sudo add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+# Update the apt package index.
+sudo apt-get update -y
+
+# install Docker CE
+VERSION=${VERSION:-$(apt-cache madison docker-ce | cut -d '|' -f 2 | grep -o '[^[:space:]]\+' | sort | tail -n 1)}
+sudo apt-get install -y docker-ce=$VERSION

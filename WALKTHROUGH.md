@@ -54,3 +54,17 @@ If everything is working, `./host` on the host & `/host` on the guest should syn
     $ ls ./host/tmp
     testbar	testfoo
     $
+
+# Install Docker CE (Edge channel) on guest
+
+Before we can start running containers, we'll need to set up Docker CE.  Let's do that now!
+
+    $ vagrant ssh -c '/vagrant/host/bin/ubuntu_artful64_install_docker_ce 17.12.0~ce-0~ubuntu'
+
+That's it!  Docker should now be be installed & configured to start at boot.  To test, reload the VM and look for the Docker daemon in the process list.
+
+    $ vagrant reload
+    $ vagrant ssh -c 'ps -ef | grep docker'
+    $ vagrant ssh -c 'ps -ef | grep docker'
+    root       994     1  0 23:21 ?        00:00:00 /usr/bin/dockerd -H fd://
+    root      1066   994  0 23:21 ?        00:00:00 docker-containerd --config /var/run/docker/containerd/containerd.toml

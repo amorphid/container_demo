@@ -2,7 +2,7 @@
 
 - DONE:  Initialize a Vagrant box on host
 - DONE:  Set up a synced folder between host & guest
-- Install Docker Edge on guest
+- DONE:  Install Docker CE (Edge channel) on guest
 - Set up a Jenkins container
 - Set up an Artifactory container
 - Set up a Docker Registry container
