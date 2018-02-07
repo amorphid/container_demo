@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+set -ux
+
+# This script:
+# - uninstalls old version of the Virtual Guest Additions
+# - installs new version of the Virtual Guest Additions
+# - is based on instructions from https://www.vagrantup.com/docs/virtualbox/boxes.html
+
+# version is updated everytime Vagrant loads the Vagrantfile
+VERSION=$(cat /vagrant/.virtual_box_version)
+
+# download appropriate version of guest additions
+URL="https://download.virtualbox.org/virtualbox/$VERSION/VBoxGuestAdditions_$VERSION.iso"
+
+# path of the artifact download
+ARTIFACT=/home/vagrant/$(basename $URL)
+
+# path of mounted artifact
+MOUNT=/media/VBoxGuestAdditions_$RANDOM
+
+# update source list
+sudo apt-get update -y
+
+# upgrade installed packages
+sudo apt-get upgrade -y
+
+# install linux headers & development tools
+sudo apt-get install -y linux-headers-$(uname -r) build-essential dkms
+
+# download CD image
+curl -Lo $ARTIFACT $URL
+
+# create mount point
+sudo rm -rf $MOUNT
+sudo mkdir -p $MOUNT
+
+# mount the artifact
+sudo mount -o loop,ro $ARTIFACT $MOUNT
+
+# uninstall old version of Guest Additions
+sudo sh $MOUNT/VBoxLinuxAdditions.run uninstall <<EOF
+yes
+EOF
+
+# install new copy
+sudo sh $MOUNT/VBoxLinuxAdditions.run
+
+# delete artifact
+rm $ARTIFACT
+
+# unmount artifact
+sudo umount $MOUNT
+
+# delete mount
+sudo rmdir $MOUNT

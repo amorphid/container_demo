@@ -1,5 +1,11 @@
+# ignore log files
+/*.log
+
 # ignore Vagrant metadata
 /.vagrant/
 
-# ignore log files
-/*.log
+# ignore VirtualBox version
+/.virtual_box_version
+
+# ignore tmp files
+/host/tmp/

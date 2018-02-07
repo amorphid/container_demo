@@ -4,7 +4,7 @@ Working description...  A container cluster running a Ruby on Rails application 
 
 # Prerequisites
 
-- Virtualbox.  Tested with v5.2.0
+- VirtualBox.  Tested with v5.2.6
 - Vagrant.  Tested with v2.0.1
 
 # Objectives

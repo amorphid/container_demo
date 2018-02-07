@@ -1,7 +1,7 @@
 # Todo
 
 - DONE:  Initialize a Vagrant box on host
-- Set up a synced folder between host & guest
+- DONE:  Set up a synced folder between host & guest
 - Install Docker Edge on guest
 - Set up a Jenkins container
 - Set up an Artifactory container
