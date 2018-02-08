@@ -3,6 +3,8 @@
 - DONE:  Initialize a Vagrant box on host
 - DONE:  Set up a synced folder between host & guest
 - DONE:  Install Docker CE (Edge channel) on guest
+- Install Ruby on Rails on guest
+- Set up GitLab CE Container
 - Set up a Jenkins container
 - Set up an Artifactory container
 - Set up a Docker Registry container
