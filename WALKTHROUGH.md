@@ -14,6 +14,8 @@ As of 2018-02-06, it looks like the Edge version of Docker CE work on Unbuntu 17
 At some point, you may want to sync files between the host machine and the guest VM.  To do this, install the VirtualBox Guest Additions.
 
     $ vagrant ssh -c /vagrant/host/bin/ubuntu_artful64_install_virtualbox_guest_additions
+    VirtualBox Guest Additions vX.X.X installed (it probably worked!)
+    $
 
 Now add config setting to the Vagrantfile.
 
@@ -60,6 +62,8 @@ If everything is working, `./host` on the host & `/host` on the guest should syn
 Before we can start running containers, we'll need to set up Docker CE.  Let's do that now!
 
     $ vagrant ssh -c '/vagrant/host/bin/ubuntu_artful64_install_docker_ce 17.12.0~ce-0~ubuntu'
+    Docker CE vX.X.X install complete (it probably worked!)
+    $
 
 That's it!  Docker should now be be installed & configured to start at boot.  To test, reload the VM and look for the Docker daemon in the process list.
 
