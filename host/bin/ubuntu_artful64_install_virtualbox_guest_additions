@@ -54,3 +54,6 @@ sudo umount $MOUNT
 
 # delete mount
 sudo rmdir $MOUNT
+
+# log completion
+echo "VirtualBox Guest Additions v$VERSION installed (it probably worked!)"

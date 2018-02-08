@@ -37,3 +37,6 @@ sudo apt-get update -y
 # install Docker CE
 VERSION=${VERSION:-$(apt-cache madison docker-ce | cut -d '|' -f 2 | grep -o '[^[:space:]]\+' | sort | tail -n 1)}
 sudo apt-get install -y docker-ce=$VERSION
+
+# log completion
+echo "Docker CE v$VERSION install complete (it probably worked!)"
