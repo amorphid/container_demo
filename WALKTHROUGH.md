@@ -7,6 +7,18 @@ This walkthrough assumes you're using a Bash shell.  Hopefully all of the Vagran
 As of 2018-02-06, it looks like the Edge version of Docker CE work on Unbuntu 17.10 (Artful Aardvark), so let's create a initialize a Vagrant box using that.
 
     $ vagrant init ubuntu/artful64
+
+Just in case, you'll want to ensure the primary file system uses up all available space on the primary partition.  To do that, add `resize2fs /dev/sda1` to the Vagrantfile's provisioning script.
+
+    Vagrant.configure("2") do |config|
+      config.vm.provision "shell", inline: <<-SHELL
+        # expand's root file system to size of root partition
+        /vagrant/host/bin/ubuntu_artful64_expand_file_system
+      SHELL
+    end
+
+Finally, start the VM.
+
     $ vagrant up
 
 # Set up a synced folder between host & guest

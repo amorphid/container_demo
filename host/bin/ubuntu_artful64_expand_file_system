@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -ux
+
+# This script:
+# - expands the root file system to fill available space on the partition
+# - in some cases, the /dev/sda1 file system on ubuntu/artful64 was only 2.2GB
+# - running this script /dev/sda1 from 2.2GB to 10GB
+
+# expand's root file system to size of root partition
+sudo resize2fs /dev/sda1
+
+# log completion
+echo "Root file system expanded to fill partition (it probably worked!)"
