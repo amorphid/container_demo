@@ -12,3 +12,7 @@ Working description...  A container cluster running a Ruby on Rails application 
 - Create a Jenkins pipeline that builds & deploys containers
 - Learn how to deploy Kubernetes on Docker CE
 - Become familiar with how to make use of Docker tags
+
+# Getting started
+
+Follow the [walkthrough](WALKTHROUGH.md).
