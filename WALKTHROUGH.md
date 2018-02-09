@@ -84,3 +84,17 @@ That's it!  Docker should now be be installed & configured to start at boot.  To
     $ vagrant ssh -c 'ps -ef | grep docker'
     root       994     1  0 23:21 ?        00:00:00 /usr/bin/dockerd -H fd://
     root      1066   994  0 23:21 ?        00:00:00 docker-containerd --config /var/run/docker/containerd/containerd.toml
+
+# Install Ruby On Rails
+
+In this demo, we're going to trigger builds that start with a pushing a git commit.  Because the tutorial author is familiar with Ruby on Rails, you get to play with Ruby on Rails!  To install Rails on the guest VM, run the following script.
+
+    $ vagrant ssh -c /vagrant/host/bin/ubuntu_artful64_install_ruby_on_rails
+    Ruby on Rails v5.1.4 install complete (it probably worked!)
+    $
+
+To verify the Rails install worked, check the version.
+
+    $ ssh -c 'export PATH="$HOME/.rbenv/bin:$PATH" ; eval "$(rbenv init -)" ; rails -v'
+    Rails 5.1.4
+    $

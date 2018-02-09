@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -ux
+
+# This script:
+# - deletes old version of rbenv,
+# - deletes everything installed by rbenv, including all Ruby versions & gems
+# - installs the lastest version of rbenv, a Ruby version manager
+# - installs ruby-build, a tool used by rbenv for installing Ruby
+# - installs Ruby v2.5.0, the programming language used to write Ruby on Rails
+# - install bundler v1.16.1, a build & packaging tool for Ruby
+# - install Ruby on Rails v 5.1.4, an MVC framework for writing web apps
+
+# delete old version of rbenv, and everytinng installed by/for rbenv
+rm -rf ~/.rbenv
+
+# pull down rbenv
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+
+# Add rbenv initialization to .bashrc
+if ! grep 'rbenv"' ~/.bashrc ; then
+  echo >> ~/.bashrc
+  echo '# rbenv initialization' >> ~/.bashrc
+  echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+  echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+fi
+
+# initialize rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+# install ruby-build dependencies
+sudo apt-get install -y autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev
+
+# add ruby-build plugin to rbenv
+mkdir -p "$(rbenv root)"/plugins
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+
+# install Ruby
+rbenv install 2.5.0
+
+# set Ruby 2.5.0 as default
+rbenv global 2.5.0
+
+# install bundler
+gem install bundler --version 1.16.1
+
+# install Ruby on Rails
+gem install rails --version 5.1.4
+
+# log completion
+echo "Ruby on Rails v5.1.4 install complete (it probably worked!)"
