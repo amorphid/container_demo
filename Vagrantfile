@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
 
   config.vm.provision "shell", inline: <<-SHELL
-    # expand's root file system to size of root partition
-    /vagrant/host/bin/ubuntu_artful64_expand_file_system
+    # runs all scripts required to initialize vm
+    /vagrant/host/bin/ubuntu_artful64_bootstrap_vm
   SHELL
 end

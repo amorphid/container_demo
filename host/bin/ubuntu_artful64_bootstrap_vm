@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -x
+
+/vagrant/host/bin/ubuntu_artful64_expand_file_system
+# TODO:  The VM should rebooted after installing guest additions, so add that!
+/vagrant/host/bin/ubuntu_artful64_install_virtualbox_guest_additions
+/vagrant/host/bin/ubuntu_artful64_install_docker_ce
+/vagrant/host/bin/ubuntu_artful64_install_ruby_on_rails
