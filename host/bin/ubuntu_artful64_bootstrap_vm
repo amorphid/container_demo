@@ -6,5 +6,5 @@ set -x
 # TODO:  The VM should rebooted after installing guest additions, so add that!
 /vagrant/host/bin/ubuntu_artful64_install_virtualbox_guest_additions
 /vagrant/host/bin/ubuntu_artful64_install_docker_ce
-sudo su vagrant -c /vagrant/host/bin/ubuntu_artful64_install_ruby_on_rails
-sudo su vagrant -c /vagrant/host/bin/ubuntu_artful64_set_up_gitlab_ce_container
+/vagrant/host/bin/ubuntu_artful64_install_ruby_on_rails
+/vagrant/host/bin/ubuntu_artful64_set_up_gitlab_ce_container

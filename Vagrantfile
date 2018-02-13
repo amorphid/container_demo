@@ -71,6 +71,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: <<-SHELL
     # runs all scripts required to initialize vm
-    /vagrant/host/bin/ubuntu_artful64_bootstrap_vm
+    sudo su vagrant -c /vagrant/host/bin/ubuntu_artful64_bootstrap_vm
   SHELL
 end
