@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+# This script:
+# - fetches & runs the Gitlab CE
+# - enables root user to use the GitLab API
+# - is based on instructions from https://www.vagrantup.com/docs/virtualbox/boxes.html
+
+# declare variables
+GUEST_FILE="/tmp/.gitlab_root_primary_token_$RANDOM"
+HOST_FILE="/host/tmp/.gitlab_root_primary_token"
+SSH_FILE="$HOME/.ssh/id_rsa"
+TOKEN_NAME="Primary token"
+
+# Run Gitlab container
+sudo docker run \
+  --detach \
+  --hostname gitlab.example.com \
+  --publish 443:443 \
+  --publish 81:80 \
+  --publish 23:22 \
+  --name gitlab \
+  --restart always \
+  --volume /srv/gitlab/config:/etc/gitlab:Z \
+  --volume /srv/gitlab/logs:/var/log/gitlab:Z \
+  --volume /srv/gitlab/data:/var/opt/gitlab:Z \
+  gitlab/gitlab-ce@sha256:ed6ce86e7847d14f0c75cacf7b5b4dfedeb3bb55b3be4c06c3d6124df8b20689
+
+# Block until GitLab starts
+block_until_gitlab_starts () {
+  printf "Waiting for GitLab to start (this could take a while)"
+  local IS_STARTED=0
+  while [[ "${IS_STARTED}" != "1" ]] ; do
+    if [[ "$(curl -i 0.0.0.0:81 2> /dev/null | head -n 1 | cut -d ' ' -f 2)" == "302" ]] ; then
+      IS_STARTED=1
+    else
+      printf '.'
+      sleep 3
+    fi
+  done
+  echo "DONE"
+}
+export -f block_until_gitlab_starts
+if ! timeout 600 bash -c block_until_gitlab_starts ; then
+  echo "TIMEOUT"
+  exit 1
+fi
+
+# Set root user password && create access token
+sudo docker exec -i gitlab gitlab-rails console 2>&1 <<EOF
+  user_email = "admin@example.com"
+  user_password = "password"
+  token_path = "$GUEST_FILE"
+  token_name = "$TOKEN_NAME"
+
+  # set root user password
+  root_user = User.find_by(email: user_email)
+  root_user.password = user_password
+  root_user.password_confirmation = user_password
+  root_user.password_automatically_set = false
+  root_user.save
+
+  # ensure only one access token
+  root_user.personal_access_tokens.delete_all
+  root_user.personal_access_tokens << PersonalAccessToken.new(name: token_name, scopes: ["api", "read_user", "sudo"])
+  token = root_user.personal_access_tokens.where(name: token_name).first.token
+  File.write(token_path,token)
+EOF
+sudo docker exec -i gitlab cat $GUEST_FILE > $HOST_FILE
+
+# Create SSH key for vagrant user
+if [ ! -f $SSH_FILE ] ; then
+  # just in case, clean up any lingering public key
+  rm -rf $SSH_FILE.pub
+  ssh-keygen -t rsa -b 4096 -C "admin@example.com" -f "$HOME/.ssh/id_rsa" -q -N ""
+fi
+
+# Add ssh key to ssh agent
+eval "$(ssh-agent -s)"
+ssh-add $HOME/.ssh/id_rsa
+
+# Create vagrant user
+VAGRANT_USER_DATA="$(curl -v --header "PRIVATE-TOKEN: $(cat $HOST_FILE)" --header "Content-Type: application/json" -X POST -d '{"email":"vagrant@example.com","password":"password","username":"vagrant","name":"Vagrant User","skip_confirmation": true}' 'http://0.0.0.0:81/api/v4/users' | python3 -m json.tool)"
+
+# Add ssh key to vagrant user
+VAGRANT_USER_ID=$(cat <<< "${VAGRANT_USER_DATA}" | grep -o '"id":[[:space:]][0-9]\+' | cut -d ' ' -f2)
+curl -i --header "PRIVATE-TOKEN: $(cat $HOST_FILE)" --header "Content-Type: application/json" -X POST -d '{"title":"Vagrant Host","key":"'"$(cat $SSH_FILE.pub)"'"}' "http://0.0.0.0:81/api/v4/users/$VAGRANT_USER_ID/keys"
+
+echo "GitLab CE is now set up (it probably worked!)"
